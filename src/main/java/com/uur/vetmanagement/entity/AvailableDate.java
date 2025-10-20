@@ -1,5 +1,6 @@
 package com.uur.vetmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "availableDates")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

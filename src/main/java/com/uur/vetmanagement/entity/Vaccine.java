@@ -1,7 +1,9 @@
 package com.uur.vetmanagement.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "vaccines")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,9 +25,11 @@ public class Vaccine {
     private Long id;
 
     @Column(name="vaccine_name")
+    @NotNull
     private String name;
 
     @Column(name = "vaccine_code")
+    @NotNull
     private String code;
 
     @Column(name = "vaccine_start")
