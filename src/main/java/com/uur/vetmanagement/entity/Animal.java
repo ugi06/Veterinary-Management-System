@@ -27,16 +27,14 @@ public class Animal {
     @Column(name = "animal_name")
     private String name;
 
-    @Column(name = "animal_species")
-    @NotNull
+    @Column(name = "animal_species",unique = true, nullable = false)
     private String species;
 
     @Column(name = "animal_breed")
-    @NotNull
-    private boolean breed;
+    private String breed;
 
-    @Column(name = "animal_gender")
-    @NotNull
+    @Column(name = "animal_gender",unique = true, nullable = false)
+    @Enumerated(EnumType.STRING)
     private gender gender;
 
     @Column(name = "animal_colour")
@@ -45,7 +43,7 @@ public class Animal {
     @Column(name = "animal_dateOfBirth")
     private LocalDate dateOfBirth;
 
-    enum gender {
+    public enum gender {
         FEMALE,
         MALE
     }
@@ -54,18 +52,18 @@ public class Animal {
     @JoinColumn(name = "animal_customer_id", referencedColumnName = "customer_id")
     private Customer animalCustomer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "animal_doctor_id", referencedColumnName = "doctor_id")
-    private Doctor animalDoctor;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "animal2doctor",
+            joinColumns = @JoinColumn(name = "a2d_animal_id"),
+            inverseJoinColumns = @JoinColumn(name = "a2d_doctor_id")
+    )
+    private List<Doctor> animalDoctors;
 
     @OneToMany(mappedBy = "animalAppointment",cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     private List<Appointment> appointmentList=new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade ={CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(
-            name = "animal2vaccine",
-            joinColumns = {@JoinColumn(name = "a2v_animal_id")},
-            inverseJoinColumns = {@JoinColumn(name = "a2v_vaccine_id")}
-    )
-    private List<Vaccine> vaccineList ;
+    @OneToMany(mappedBy = "animal", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<Vaccination> vaccinationHistory = new ArrayList<>();
+
 }

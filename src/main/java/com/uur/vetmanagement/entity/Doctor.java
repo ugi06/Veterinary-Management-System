@@ -27,13 +27,11 @@ public class Doctor {
     @NotNull
     private String name;
 
-    @Column(name = "doctor_phone")
-    @NotNull
+    @Column(name = "doctor_phone",unique = true)
     private String phone;
 
-    @Column(name = "doctor_email")
+    @Column(name = "doctor_email",unique = true,nullable = false)
     @Email
-    @NotNull
     private String email;
 
     @Column(name = "doctor_address")
@@ -42,8 +40,8 @@ public class Doctor {
     @Column(name = "doctor_city")
     private String city;
 
-    @OneToMany(mappedBy = "animalDoctor",cascade = {CascadeType.MERGE,CascadeType.PERSIST})
-    private List<Animal> animalList = new ArrayList<>();
+    @ManyToMany(mappedBy = "animalDoctors", fetch = FetchType.LAZY)
+    private List<Animal> animals;
 
     @OneToMany(mappedBy = "doctorAvailability",cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     private List<AvailableDate> availableDateList=new ArrayList<>();

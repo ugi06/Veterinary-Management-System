@@ -27,12 +27,11 @@ public class Customer {
     @NotNull
     private String name;
 
-    @Column(name = "customer_phone")
-    @NotNull
+    @Column(name = "customer_phone",unique = true, nullable = false)
     private String phone;
 
-    @Column(name = "customer_email")
-    @NotNull
+    @Column(name = "customer_email",unique = true,nullable = false)
+    @Email
     private String email;
 
     @Column(name = "customer_address")

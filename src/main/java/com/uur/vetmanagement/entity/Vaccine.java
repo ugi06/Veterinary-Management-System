@@ -24,20 +24,12 @@ public class Vaccine {
     @Column(name = "vaccine_id")
     private Long id;
 
-    @Column(name="vaccine_name")
-    @NotNull
     private String name;
 
-    @Column(name = "vaccine_code")
-    @NotNull
     private String code;
 
-    @Column(name = "vaccine_start")
-    private LocalDate protectionStartDate;
+    private Integer durationInDays;
 
-    @Column(name = "vaccine_end")
-    private LocalDate protectionFinishDate;
-
-    @ManyToMany(mappedBy = "vaccineList",cascade ={CascadeType.PERSIST,CascadeType.MERGE})
-    private List<Animal> animalList = new ArrayList<>();
+    @OneToMany(mappedBy = "vaccineType", cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    private List<Vaccination> animalVaccinations;
 }
