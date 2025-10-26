@@ -1,19 +1,26 @@
 package com.uur.vetmanagement.service.concretes;
 
+import com.uur.vetmanagement.core.config.modelMapper.IModelMapperService;
 import com.uur.vetmanagement.entity.Vaccine;
 import com.uur.vetmanagement.repository.VaccineRepo;
 import com.uur.vetmanagement.service.abstracts.IVaccineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+@Service
 
 public class VaccineService implements IVaccineService {
 
     private final VaccineRepo vaccineRepo;
+    private final IModelMapperService modelMapper;
+
 
     @Autowired
-    public VaccineService(VaccineRepo vaccineRepo) {
+    public VaccineService(VaccineRepo vaccineRepo, IModelMapperService modelMapper) {
         this.vaccineRepo = vaccineRepo;
+        this.modelMapper = modelMapper;
     }
 
 
@@ -38,9 +45,7 @@ public class VaccineService implements IVaccineService {
                 .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
         existingVaccine.setName(vaccine.getName());
         existingVaccine.setCode(vaccine.getCode());
-        existingVaccine.setProtectionStartDate(vaccine.getProtectionStartDate());
-        existingVaccine.setProtectionFinishDate(vaccine.getProtectionFinishDate());
-
+        existingVaccine.setDurationInDays(vaccine.getDurationInDays());
         return vaccineRepo.save(existingVaccine);
     }
 
