@@ -13,7 +13,6 @@ public interface ICustomerService {
     Page<Customer> findAll(Pageable pageable);
     Customer update(Long id, Customer customer);
     void delete(Long id);
-
     // Filtreleme için Manager'ın çağıracağı metot
     List<Customer> findByName(String name);
 }

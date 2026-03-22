@@ -40,10 +40,8 @@ public class AnimalService implements IAnimalService {
 
     @Override
     public Animal getById(Long id) {
-        // 📌 Sadece Repository'den veriyi çeker ve bulamazsa hata fırlatır.
         return this.animalRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Hayvan ID'si bulunamadı: " + id));
-        // NotFoundException, sizin custom hata sınıfınız olmalıdır.
     }
 
     @Override
@@ -60,9 +58,7 @@ public class AnimalService implements IAnimalService {
     @Override
     public void delete(Long id) {
 
-        // 1. 🔍 Entity'nin varlığını kontrol et
         if (!this.animalRepo.existsById(id)) {
-            // Yoksa hata fırlat (Controller bu hatayı 404'e çevirmelidir)
             throw new RuntimeException("Silinmek istenen hayvan ID'si bulunamadı: " + id);
         }
 

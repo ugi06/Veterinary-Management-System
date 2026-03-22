@@ -24,7 +24,6 @@ public class CustomerController {
         this.customerManager = customerManager;
     }
 
-    // 1. SAVE (POST)
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<CustomerResponse> save(@Valid @RequestBody CustomerSaveRequest request) {
@@ -32,7 +31,6 @@ public class CustomerController {
         return ResultData.created(response);
     }
 
-    // 2. GET BY ID (GET) - DTO döndürülerek sonsuz döngü engellenir.
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<CustomerResponse> getById(@PathVariable("id") Long id) {
@@ -40,20 +38,15 @@ public class CustomerController {
         return ResultData.success(response);
     }
 
-    // 3. FIND ALL (GET)
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-// 📌 Parametre olarak Pageable objesi eklenir.
     public ResultData<Page<CustomerResponse>> findAll(Pageable pageable) {
 
-        // 📌 Manager metodunu Pageable ile çağır
         Page<CustomerResponse> response = this.customerManager.getAllCustomers(pageable);
 
-        // ResultData'nın Page<T> tipini desteklediği varsayılmıştır.
         return ResultData.success(response);
     }
 
-    // 4. UPDATE (PUT)
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<CustomerResponse> update(
@@ -64,14 +57,12 @@ public class CustomerController {
         return ResultData.success(response);
     }
 
-    // 5. DELETE (DELETE)
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
         this.customerManager.deleteCustomer(id);
     }
 
-    // 6. FILTER BY NAME (GET)
     @GetMapping("/by-name")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<CustomerResponse>> getCustomersByName(@RequestParam String name) {

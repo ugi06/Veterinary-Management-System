@@ -1,12 +1,8 @@
 package com.uur.vetmanagement.controller;
 
-import com.uur.vetmanagement.core.config.modelMapper.IModelMapperService;
-import com.uur.vetmanagement.entity.Doctor;
 import com.uur.vetmanagement.entity.Vaccine;
 import com.uur.vetmanagement.service.abstracts.IVaccineService;
-import com.uur.vetmanagement.service.concretes.VaccineService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +13,9 @@ import java.util.List;
 public class VaccineController {
 
     private final IVaccineService vaccineService;
-    private final IModelMapperService modelMapper;
 
-    public VaccineController(IVaccineService vaccineService, IModelMapperService modelMapper) {
+    public VaccineController(IVaccineService vaccineService) {
         this.vaccineService = vaccineService;
-        this.modelMapper = modelMapper;
     }
 
 

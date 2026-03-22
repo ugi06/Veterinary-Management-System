@@ -47,4 +47,10 @@ public class DoctorManager {
         this.doctorService.delete(id);
     }
 
+    public String delete(Long id) {
+
+        this.doctorService.delete(id);
+        return "İşlem başarılı";
+
+    }
 }

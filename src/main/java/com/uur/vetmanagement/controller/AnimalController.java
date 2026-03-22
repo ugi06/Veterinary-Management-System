@@ -5,7 +5,6 @@ import com.uur.vetmanagement.dto.request.animal.AnimalSaveRequest;
 import com.uur.vetmanagement.dto.request.animal.AnimalUpdateRequest;
 import com.uur.vetmanagement.dto.response.animal.AnimalResponse;
 import com.uur.vetmanagement.entitiesManager.AnimalManager;
-import com.uur.vetmanagement.service.abstracts.IAnimalService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -17,12 +16,10 @@ import java.util.List;
 @RequestMapping("/v1/animals")
 public class AnimalController {
 
-    private final IAnimalService animalService ;
     private final AnimalManager animalManager;
 
 
-    public AnimalController(IAnimalService animalService, AnimalManager animalManager) {
-        this.animalService = animalService;
+    public AnimalController(AnimalManager animalManager) {
         this.animalManager = animalManager;
     }
 
@@ -57,6 +54,7 @@ public class AnimalController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<AnimalResponse> update(
+
             @PathVariable("id") Long id,
             @RequestBody AnimalUpdateRequest animalUpdateRequest // DTO alınıyor
     ) {
@@ -69,7 +67,7 @@ public class AnimalController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
 
-        this.animalService.delete(id);
+        this.animalManager.delete(id);
     }
 
     @GetMapping("/by-name")
@@ -81,7 +79,6 @@ public class AnimalController {
         return ResultData.success(response);
     }
 
-    // 3. HAYVAN SAHİBİNİN TÜM HAYVANLARINI GÖRÜNTÜLEME
     @GetMapping("/by-customer/{customerId}")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<AnimalResponse>> getAnimalsByCustomerId(@PathVariable("customerId") Long customerId) {

@@ -5,7 +5,6 @@ import com.uur.vetmanagement.dto.request.doctor.DoctorSaveRequest;
 import com.uur.vetmanagement.dto.request.doctor.DoctorUpdateRequest;
 import com.uur.vetmanagement.dto.response.doctor.DoctorResponse;
 import com.uur.vetmanagement.entitiesManager.DoctorManager;
-import com.uur.vetmanagement.service.abstracts.IDoctorService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -16,11 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/doctors")
 public class DoctorController {
 
-    private final IDoctorService doctorService;
     private final DoctorManager doctorManager;
 
-    public DoctorController(IDoctorService doctorService, DoctorManager doctorManager) {
-        this.doctorService = doctorService;
+    public DoctorController(DoctorManager doctorManager) {
         this.doctorManager = doctorManager;
     }
 
@@ -62,7 +59,8 @@ public class DoctorController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") Long id) {
-        this.doctorService.delete(id);
+    public String delete(@PathVariable("id") Long id) {
+        this.doctorManager.delete(id);
+        return "İşlem başarılı";
     }
 }

@@ -1,7 +1,10 @@
 package com.uur.vetmanagement.service.concretes;
 
+import com.uur.vetmanagement.core.config.exception.Msg;
+import com.uur.vetmanagement.core.config.exception.NotFoundException;
 import com.uur.vetmanagement.core.config.modelMapper.IModelMapperService;
 import com.uur.vetmanagement.dto.request.appointment.AppointmentSaveRequest;
+import com.uur.vetmanagement.dto.request.appointment.AppointmentUpdateRequest;
 import com.uur.vetmanagement.dto.response.appointment.AppointmentResponse;
 import com.uur.vetmanagement.entity.Animal;
 import com.uur.vetmanagement.entity.Appointment;
@@ -9,6 +12,9 @@ import com.uur.vetmanagement.repository.AnimalRepo;
 import com.uur.vetmanagement.repository.AppointmentRepo;
 import com.uur.vetmanagement.service.abstracts.IAppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,38 +39,43 @@ public class AppointmentService implements IAppointmentService {
     public AppointmentResponse save(AppointmentSaveRequest appointmentSaveRequest) {
 
 
-        Animal animal = animalRepo.findById(appointmentSaveRequest.getAnimalId()) // DTO'dan ID'yi alıyoruz
-                .orElseThrow(() -> new RuntimeException("Randevu alınacak hayvan bulunamadı."));
+        Animal animal = animalRepo.findById(appointmentSaveRequest.getAnimalId())
+                .orElseThrow(() -> new NotFoundException(Msg.INVALID_ANIMAL));
 
-        Appointment appointmentToSave = modelMapper.forRequest().map(appointmentSaveRequest, Appointment.class);
+        Appointment appointmentToSave = this.modelMapper.forRequest().map(appointmentSaveRequest, Appointment.class);
 
         appointmentToSave.setAnimalAppointment(animal);
-        appointmentToSave.setId(null);
 
-        Appointment savedAppointment = appointmentRepo.save(appointmentToSave);
+        this.appointmentRepo.save(appointmentToSave);
 
-        return modelMapper.forResponse().map(savedAppointment, AppointmentResponse.class);
-}
+        return this.modelMapper.forResponse().map(appointmentToSave, AppointmentResponse.class);
+    }
 
-@Override
-public Appointment getById(Long id) {
-    return this.appointmentRepo.findById(id).orElseThrow(); // Exception ekle
-}
+    @Override
+    public AppointmentResponse getById(Long id) {
 
-@Override
-public List<Appointment> findAll() {
-    return this.appointmentRepo.findAll();
-}
+        return this.modelMapper.forResponse().map(this.appointmentRepo.findById(id),AppointmentResponse.class);
+    }
 
-@Override
-public Appointment update(Long id, Appointment appointment) {
-    Appointment existingAppointment = appointmentRepo.findById(id).orElseThrow();// Exception ekle
-    existingAppointment.setAppointmentDate(appointment.getAppointmentDate());
-    return this.appointmentRepo.save(existingAppointment);
-}
+    @Override
+    public Page<Appointment> cursor(int page, int pageSize) {
 
-@Override
-public void delete(Long id) {
-    this.appointmentRepo.deleteById(id);
-}
+        Pageable pageable = PageRequest.of(page,pageSize);
+        return this.appointmentRepo.findAll(pageable);
+
+    }
+
+    @Override
+    public AppointmentResponse update(Long id, AppointmentUpdateRequest appointmentUpdateRequest) {
+        Appointment existingAppointment = appointmentRepo.findById(id).orElseThrow();
+        existingAppointment.setAppointmentDate(appointmentUpdateRequest.getAppointmentDate());
+        Appointment save = this.appointmentRepo.save(existingAppointment);
+        return this.modelMapper.forResponse().map(save,AppointmentResponse.class);
+    }
+
+
+    @Override
+    public void delete(Long id) {
+        this.appointmentRepo.deleteById(id);
+    }
 }

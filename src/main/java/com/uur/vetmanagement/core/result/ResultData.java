@@ -31,6 +31,8 @@ public class ResultData <T> extends Result{
         return new Result(false,msg,"404");
     }
 
+    
+
 
 
 

@@ -1,7 +1,6 @@
 package com.uur.vetmanagement.controller;
 
 
-import com.uur.vetmanagement.core.result.Result;
 import com.uur.vetmanagement.core.result.ResultData;
 import com.uur.vetmanagement.dto.request.vaccination.VaccinationSaveRequest;
 import com.uur.vetmanagement.dto.request.vaccination.VaccinationUpdateRequest;
@@ -22,13 +21,13 @@ import java.util.List;
 public class VaccinationController {
 
 
-    private final VaccinationManager vaccinationManager; // Manager'ı kullan
+    private final VaccinationManager vaccinationManager;
 
     public VaccinationController(VaccinationManager vaccinationManager) {
         this.vaccinationManager = vaccinationManager;
     }
 
-    // 1. CREATE (POST)
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED) // HTTP 201
     public ResultData<VaccinationResponse> save(@Valid @RequestBody VaccinationSaveRequest request) {
@@ -36,7 +35,7 @@ public class VaccinationController {
         return ResultData.created(response);
     }
 
-    // 2. READ / FIND BY ID (GET)
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK) // HTTP 200
     public ResultData<VaccinationResponse> getById(@PathVariable("id") Long id) {
@@ -44,7 +43,6 @@ public class VaccinationController {
         return ResultData.success(response);
     }
 
-    // 3. READ / FIND ALL (GET) - Sayfalama
     @GetMapping
     @ResponseStatus(HttpStatus.OK) // HTTP 200
     public ResultData<Page<VaccinationResponse>> findAll(Pageable pageable) {
@@ -52,7 +50,6 @@ public class VaccinationController {
         return ResultData.success(response);
     }
 
-    // 4. UPDATE (PUT)
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK) // HTTP 200
     public ResultData<VaccinationResponse> update(
@@ -63,13 +60,11 @@ public class VaccinationController {
         return ResultData.success(response);
     }
 
-    // 5. DELETE (DELETE)
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT) // HTTP 204
-    public Result delete(@PathVariable("id") Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResultData<String> delete(@PathVariable("id") Long id) {
         this.vaccinationManager.deleteVaccination(id);
-        // Silme başarılı, 204 döner.
-        return new Result(true, "Aşı kaydı başarıyla silindi", "204");
+        return ResultData.success("İşlem başarılı");
     }
 
     @GetMapping("/by-animal/{animalId}")
@@ -79,7 +74,6 @@ public class VaccinationController {
         return ResultData.success(response);
     }
 
-    // 3. İSTER: Bitiş tarihi aralığına göre aşıları listeleme (Query Param kullanılır)
     @GetMapping("/expiration-range")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<VaccinationResponse>> getByProtectionPeriod(
